@@ -5,6 +5,8 @@ and how do these metrics compare to customers who made a purchase more than 6 mo
 
 select 
 	case
+    when oi.created_at >= '2020-01-01' and oi.created_at < '2021-01-01' then '2020'
+    when oi.created_at >= '2021-01-01' and oi.created_at < '2022-01-01' then '2021'
     when oi.created_at >= current_date - interval '6' month then 'Past 6 Months'
     when oi.created_at < current_date - interval '6' month then 'More 6 Months Ago'
     end as `customer_timeline_group`,
