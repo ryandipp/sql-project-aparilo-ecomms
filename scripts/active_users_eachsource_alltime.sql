@@ -2,7 +2,7 @@
 and are there any sources that are performing better or worse than others?
 How can we leverage this information to improve customer retention and drive repeat business from these sources?*/
 
--- 2022 ACTIVE USERS ALL TIME BY SOURCE
+-- 2022 ACTIVE USERS BY SOURCE
 select year(o.created_at) as yearly, month(o.created_at) as monthly,  
 	count(case when u.traffic_source = 'Search' then u.traffic_source else null end) as af_search,
     count(case when u.traffic_source = 'Organic' then u.traffic_source else null end) as af_organic,
