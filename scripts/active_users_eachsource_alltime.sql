@@ -9,17 +9,20 @@ select year(o.created_at) as yearly, month(o.created_at) as monthly,
     count(case when u.traffic_source = 'Facebook' then u.traffic_source else null end) as af_facebook,
     count(case when u.traffic_source = 'Email' then u.traffic_source else null end) as af_email,
     count(case when u.traffic_source = 'Display' then u.traffic_source else null end) as af_display
-from orders o join users u on o.user_id = u.id
-where o.returned_at is null
+from users u join orders o on o.user_id = u.id
+where o.status in ('Shipped', 'Complete')
 and date(o.created_at) >= '2022-01-01' and date(o.created_at) < '2023-01-01'
 group by yearly, monthly
 order by yearly, monthly;
 
 -- ACTIVE USERS ALL TIME BY SOURCE
+with t1 as (select traffic_source, count(id) as total_users from users
+group by traffic_source)
+
 select u.traffic_source,
-	count(DISTINCT o.user_id) as active_users,
-    count(u.id) as total_users
-from orders o join users u on o.user_id = u.id
+count(DISTINCT o.user_id) as active_users,
+t1.total_users from orders o join users u on o.user_id = u.id
+join t1 on u.traffic_source = t1.traffic_source
 where o.created_at is not null
 group by u.traffic_source
 order by active_users desc;
@@ -28,5 +31,5 @@ order by active_users desc;
 select u.id, u.email, u.age, u.traffic_source
 from users u
 where u.id not in ( select o.user_id 
-					from orders o)
+			from orders o)
 order by id;
