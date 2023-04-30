@@ -10,11 +10,10 @@ select
     when oi.created_at >= current_date - interval '6' month then 'Past 6 Months'
     when oi.created_at < current_date - interval '6' month then 'More 6 Months Ago'
     end as `customer_timeline_group`,
-    sum(oi.sale_price) / count(o.order_id) as avg_order_value,
+    avg(oi.sale_price) as avg_order_value,
     count(oi.order_id) / count(distinct oi.user_id) as order_freq
-from
-	orders o	join orderitems oi on o.order_id = oi.order_id
-				join products p on oi.product_id = p.id
+from orders o join orderitems oi on o.order_id = oi.order_id
+join products p on oi.product_id = p.id
 where oi.delivered_at is not null
 group by `customer_timeline_group`
 order by `customer_timeline_group` desc
