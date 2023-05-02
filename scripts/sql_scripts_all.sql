@@ -34,6 +34,13 @@ group by p.category, p.brand, o.gender
 order by orderqty desc, avg_sale_price desc
 limit 15;
 
+/*How does geographical map for purchase value look like?*/
+select u.country Country, sum(oi.sale_price) Purchase_Value
+from users u join orderitems oi on u.id = oi.user_id
+where oi.status = 'Complete'
+group by Country
+order by Purchase_Value desc;
+
 /*How does the distribution of male and female customers differ across different product categories,
 and are there any categories that are predominantly purchased by one gender?*/
 select
